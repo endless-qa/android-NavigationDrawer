@@ -1,51 +1,22 @@
 
-Android Navigation Drawer Sample
+Android Navigation Drawer Sample UI Testing
 ===================================
 
-This example illustrates a common usage of the DrawerLayout widget in the Android
-support library.
+The following basic functionality is covered by the automated tests:
+- displaying the default planet on app start and validating the available planets (BasicFunctionalityTests);
+- selecting a planet from the menu and validating that through the correct title and the image displayed (PlanetSelectionFeatureParametrizedTests);
+- initiating quick search for a currently opened planet and validating intents sent (QuickSearchFeatureTests).
 
-Pre-requisites
+Tests Design Approach
 --------------
 
-- Android SDK 27
-- Android Build Tools v27.0.2
-- Android Support Repository
+The PageObject design pattern is used for designing the framework, encapsulating the logic of UI interaction and separation it from the business logic in tests. 
 
-Getting Started
+All classes with functional tests extend the BaseTestModel parent class which contains initialization logic before each test (navigating to the NavigationDrawerActivity) and screenshot taking logic after each test. The BaseTestModel class in turn extends the TestHelper class which holds extra methods that make tester's life easier (handling the arisen QuickSearch, getting current activity).
+
+As Espresso doesn't have a matcher for asserting image from resources on a view out-of-the-box, the DrawableMatcher has been created. It serves the purpose of validating that a correct drawable is displayed on an ImageView, using its name as a search criteria (makes sence for the sample app). As there might be many custom matchers in future, there is the CustomMatchers wrapper class that aligns the DrawableMatcher usage with the Esspresso-like style.
+
+Running Tests
 ---------------
 
-This sample uses the Gradle build system. To build this project, use the
-"gradlew build" command or use "Import Project" in Android Studio.
-
-Support
--------
-
-- Google+ Community: https://plus.google.com/communities/105153134372062985968
-- Stack Overflow: http://stackoverflow.com/questions/tagged/android
-
-If you've found an error in this sample, please file an issue:
-https://github.com/googlesamples/android-Navigation Drawer
-
-Patches are encouraged, and may be submitted by forking this project and
-submitting a pull request through GitHub. Please see CONTRIBUTING.md for more details.
-
-License
--------
-
-Copyright 2017 The Android Open Source Project, Inc.
-
-Licensed to the Apache Software Foundation (ASF) under one or more contributor
-license agreements.  See the NOTICE file distributed with this work for
-additional information regarding copyright ownership.  The ASF licenses this
-file to you under the Apache License, Version 2.0 (the "License"); you may not
-use this file except in compliance with the License.  You may obtain a copy of
-the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
-License for the specific language governing permissions and limitations under
-the License.
+**Spoon** framework is configured for running tests on multiple connected devices, taking screenshots after each test and generating a final report. In order to run tests, navigate to the project's root folder, run the **gradlew spoon** command, wait for the tests to be executed on all connected devices and find a final report in the **\Application\build\spoon-output** folder.
